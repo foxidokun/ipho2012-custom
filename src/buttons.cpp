@@ -3,11 +3,11 @@
 #include "errors.h"
 #include <Arduino.h>
 
-#define BUTTON_START_BUTTON_PIN  8
-#define BUTTON_STOP_BUTTON_PIN   9
-#define BUTTON_PREV_BUTTON_PIN   10
-#define BUTTON_NEXT_BUTTON_PIN   11
-#define BUTTON_SAMPLE_BUTTON_PIN 12
+#define BUTTON_START_BUTTON_PIN  2
+#define BUTTON_STOP_BUTTON_PIN   3
+#define BUTTON_PREV_BUTTON_PIN   4
+#define BUTTON_NEXT_BUTTON_PIN   5
+#define BUTTON_SAMPLE_BUTTON_PIN 6
 
 uint8_t common_mask;
 volatile uint8_t *buttons_port;
@@ -42,7 +42,7 @@ void buttons_init ()
 }
 
 #define MATCH_BUTTON_TO_ACTION(pin, ch) {   \
-if (digitalRead(pin))                       \
+if (digitalRead(pin) == LOW)                \
 {                                           \
     return ch;                              \
 }}

@@ -20,13 +20,6 @@ void led_init()
     while (true) {
         uint8_t pattern_copy = pattern;
         for (int i = 0; i < 8; ++i) {
-            Serial.print("pattern_copy: ");
-            Serial.println(pattern_copy);
-            Serial.print("pattern");
-            Serial.println(pattern);
-            Serial.print("state");
-            Serial.println(pattern_copy & 0b1);
-
             digitalWrite(LED_BUILTIN, (pattern_copy & 0b1));
             pattern_copy = pattern_copy >> 1;
 

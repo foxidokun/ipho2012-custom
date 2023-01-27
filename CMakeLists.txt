@@ -30,4 +30,4 @@ add_custom_target(
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-add_executable(Z_DUMMY_TARGET ${SRC_LIST} src/measure.cpp src/measure.h include/debug.h src/buttons.cpp src/buttons.h include/errors.h src/led.cpp src/led.h)
+add_executable(Z_DUMMY_TARGET ${SRC_LIST} src/measure.cpp src/measure.h include/debug.h src/buttons.cpp src/buttons.h include/errors.h src/led.cpp src/led.h src/memory.cpp src/memory.h)
