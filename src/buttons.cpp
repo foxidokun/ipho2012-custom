@@ -3,11 +3,7 @@
 #include "errors.h"
 #include <Arduino.h>
 
-#define BUTTON_START_BUTTON_PIN  2
-#define BUTTON_STOP_BUTTON_PIN   3
-#define BUTTON_PREV_BUTTON_PIN   4
-#define BUTTON_NEXT_BUTTON_PIN   5
-#define BUTTON_SAMPLE_BUTTON_PIN 6
+#include "config.h"
 
 uint8_t common_mask;
 volatile uint8_t *buttons_port;

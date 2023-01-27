@@ -20,6 +20,4 @@ void measure_init ();
 void filter_take_new_data();
 void filter_take_first_data ();
 
-#define MEASURE_MILLIS 50
-
 #endif //IPHO2012_REWORKED_MEASURE_H

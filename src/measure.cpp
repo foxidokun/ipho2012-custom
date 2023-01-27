@@ -2,13 +2,7 @@
 #include "../lib/ADS1X15/ADS1X15.h"
 #include "measure.h"
 #include "debug.h"
-
-//----------------------------------------------------------------------------------------------------------------------
-
-#define FILTER_MAX_HISTORY 15
-#define FILTER_MIN_AVERAGE 5
-#define NUM_SAMPLES_PER_MEASUREMENT 8
-#define RESISTOR 1
+#include "config.h"
 
 //----------------------------------------------------------------------------------------------------------------------
 
