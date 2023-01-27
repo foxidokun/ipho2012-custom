@@ -7,11 +7,7 @@
 
 //----------------------------------------------------------------------------------------------------------------------
 
-#define SWITCH_SET_TIME_THRESHOLD_MS 700
-
-//----------------------------------------------------------------------------------------------------------------------
-
-static void take_action(int action);
+static void take_action();
 static void start_new_set();
 static void render (filtered_data *data);
 
@@ -57,35 +53,17 @@ uint32_t prev_timing    = 0;
 uint32_t current_timing = 0;
 #endif
 
-bool is_button_pressed      = false;
-char last_pressed           = 0;
-uint32_t first_pressed_time = 0;
+bool is_button_pressed = false;
 
 void loop()
 {
     if (IS_BUTTONS_PRESSED()) {
-        int buttons = check_buttons();
-
-        if (buttons == 'p' || buttons == 'n')
-        {
-            if (last_pressed == buttons) {
-                if (millis() - first_pressed_time > SWITCH_SET_TIME_THRESHOLD_MS) {
-                    take_action (toUpperCase(buttons));
-                    last_pressed = 0;
-                }
-            } else {
-                last_pressed = (char) buttons;
-                first_pressed_time = millis();
-            }
-        }
-
         if (!is_button_pressed) {
-            take_action (buttons);
+            take_action();
             is_button_pressed = true;
         }
     } else {
         is_button_pressed = false;
-        last_pressed = 0;
     }
 
     if (current_state.current_process == MEASURING)
@@ -127,10 +105,10 @@ void loop()
 //STATIC
 //----------------------------------------------------------------------------------------------------------------------
 
-static void take_action(int action)
+static void take_action()
 {
+    int action = check_buttons();
     filtered_data data;
-    int set_tmp;
 
     switch (action)
     {
@@ -153,25 +131,25 @@ static void take_action(int action)
         case 's':
             if (current_state.current_process == MEASURING)
             {
+                Serial.println("Sampling");
                 memory_sample();
             }
         break;
 
         case 'p':
-            if (current_state.current_process == GREETING)
+            if (current_state.current_process != BROWSING)
             {
                 current_state.browsing_index = latest_data.abs_index;
                 current_state.current_process = BROWSING;
             }
 
-            if (current_state.current_process == BROWSING) {
-                if (current_state.browsing_index > 0) {
-                    current_state.browsing_index--;
-                }
-
-                memory_fetch(&data, current_state.browsing_index);
-                render(&data);
+            if (current_state.browsing_index > 0) {
+                current_state.browsing_index--;
             }
+
+            memory_fetch (&data, current_state.browsing_index);
+            render (&data);
+
             break;
 
         case 'n':
@@ -181,37 +159,10 @@ static void take_action(int action)
                 {
                     current_state.browsing_index++;
                 }
-
-                memory_fetch (&data, current_state.browsing_index);
-                render (&data);
             }
 
-            break;
-
-        case 'P':
-            if (current_state.current_process == BROWSING) {
-                memory_fetch(&data, current_state.browsing_index);
-                if (data.set > 1) {
-                    current_state.browsing_index -= data.set_index + 1;
-                }
-
-                render(&data);
-            }
-
-            break;
-
-        case 'N':
-            if (current_state.current_process == BROWSING) {
-                memory_fetch(&data, current_state.browsing_index);
-                set_tmp = data.set;
-
-                while (data.set == set_tmp && current_state.browsing_index + 1 < latest_data.abs_index) {
-                    current_state.browsing_index++;
-                    memory_fetch(&data, current_state.browsing_index);
-                }
-
-                render(&data);
-            }
+            memory_fetch (&data, current_state.browsing_index);
+            render (&data);
 
             break;
     }
