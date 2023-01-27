@@ -46,7 +46,7 @@ void memory_init()
 
 void memory_prepare_sampling ()
 {
-    datafile = SD.open("ezmometr.bin", O_READ | O_WRITE);
+    datafile = SD.open("ezmometr.bin", O_WRITE);
     datafile.seek (sizeof (memory_header) + memoryHeader.total_measures * sizeof (filtered_data));
 }
 
@@ -56,21 +56,21 @@ void memory_sample ()
     latest_data.set_index++;
     latest_data.abs_index++;
 
-    // TODO: update header
+//    datafile.seek(0);
+//    memoryHeader.total_measures = latest_data.abs_index;
+//    memoryHeader.last_set       = latest_data.set;
+//    datafile.write((const uint8_t *) &memoryHeader, sizeof(memoryHeader));
+
+//    datafile.flush();
 }
 
 void memory_fetch (filtered_data *buf, uint32_t abs_pos)
 {
-    Serial.print ("Fetching at logical pos ");
-    Serial.println (abs_pos);
 
     datafile = SD.open ("ezmometr.bin", O_READ);
     datafile.seek (sizeof (memory_header) + abs_pos * sizeof (filtered_data));
     datafile.read (buf, sizeof (filtered_data));
     datafile.close();
-
-    Serial.print ("Fetched logical pos:");
-    Serial.print (buf->abs_index);
 }
 
 void memory_stop_sampling ()
