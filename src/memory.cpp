@@ -55,8 +55,6 @@ void memory_sample ()
     datafile.write ((const uint8_t *) &latest_data, sizeof (filtered_data));
     latest_data.set_index++;
     latest_data.abs_index++;
-
-    // TODO: update header
 }
 
 void memory_fetch (filtered_data *buf, uint32_t abs_pos)
