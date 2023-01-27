@@ -17,6 +17,8 @@ struct filtered_data latest_data;
 float history[2][FILTER_MAX_HISTORY]; //[v/i]
 uint8_t history_index;
 
+uint32_t set_start_time = 0;
+
 ADS1115 ADS(0x48);
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -55,7 +57,9 @@ void filter_take_first_data(){
     latest_data.voltage_der = 0;
     latest_data.current = result[1]/RESISTOR;
     latest_data.current_der = 0;
-    latest_data.time = millis();
+    latest_data.time = 0;
+
+    set_start_time = millis();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -70,7 +74,7 @@ void filter_take_new_data() {
 
     LOG_TIME("Measure in filter end");
 
-    latest_data.time = millis();
+    latest_data.time = millis() - set_start_time;
 
     history_index = (history_index + 1) % FILTER_MAX_HISTORY;
 
