@@ -1,0 +1,3 @@
+[submodule "lib/ADS1X15"]
+	path = lib/ADS1X15
+	url = https://github.com/RobTillaart/ADS1X15
