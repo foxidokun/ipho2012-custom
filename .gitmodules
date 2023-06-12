@@ -7,3 +7,6 @@
 [submodule "lib/hd44780"]
 	path = lib/hd44780
 	url = https://github.com/duinoWitchery/hd44780
+[submodule "lib/SST25VF"]
+	path = lib/SST25VF
+	url = https://github.com/nullboundary/SST25VF
