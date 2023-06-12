@@ -14,7 +14,7 @@
 /// Сколько измерений использовать при расчете производной
 #define FILTER_MAX_HISTORY 15
 /// Кол-во повторных измерений на точку (больше -- дольше)
-#define NUM_SAMPLES_PER_MEASUREMENT 8
+#define NUM_SAMPLES_PER_MEASUREMENT 16
 /// Сопротивление резистора (Ом)
 #define RESISTOR 1
 
@@ -30,6 +30,6 @@
 /// такт цикла должен укладываться в это время.
 /// Чтобы проверить совместимость параметров MEASURE_MILLIS и NUM_SAMPLES_PER_MEASUREMENT помогает опция
 /// DEBUG_RUNAWAY_DETECT, которая выводит сообщение в консоль если был пропущен момент измерения
-#define MEASURE_MILLIS 50
+#define MEASURE_MILLIS 100
 
 #endif //IPHO2012_REWORKED_CONFIG_H

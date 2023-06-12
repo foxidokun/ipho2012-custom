@@ -5,12 +5,17 @@
 #include "debug.h"
 #include "memory.h"
 #include "config.h"
+#include <Wire.h>
+
+#include "../lib/LiquidCrystal_I2C-1.1.2/LiquidCrystal_I2C.h"
 
 //----------------------------------------------------------------------------------------------------------------------
 
 static void take_action();
 static void start_new_set();
 static void render (filtered_data *data);
+
+LiquidCrystal_I2C lcd(0x3F,20,4);
 
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -30,6 +35,7 @@ struct state {
 // PUBLIC
 //----------------------------------------------------------------------------------------------------------------------
 
+uint8_t symbol_i[8]={0,0,17,19,21,25,17,0};
 
 void setup()
 {
@@ -42,7 +48,11 @@ void setup()
 
     current_state.current_process = GREETING;
 
-    // load indexes
+//     load indexes
+
+    lcd.init();
+    lcd.clear();
+    lcd.backlight();
 }
 
 #if DEBUG_RUNAWAY_DETECT
@@ -182,17 +192,27 @@ static void start_new_set()
 
 static void render (filtered_data *data)
 {
-    Serial.println("\n\n\n\n\n\n\n");
-    Serial.print("Set: ");
-    Serial.println(data->set);
-    Serial.print("N: ");
-    Serial.println(data->set_index);
-    Serial.print("V    : ");
-    Serial.println(data->voltage, 3);
-    Serial.print("dV/dt: ");
-    Serial.println(data->voltage_der, 3);
-    Serial.print("I    : ");
-    Serial.println(data->current, 3);
-    Serial.print("dI/dt: ");
-    Serial.println(data->current_der, 3);
+    lcd.clear();
+
+    lcd.setCursor(0, 0);
+    lcd.print("Set: ");
+    lcd.print(data->set);
+    lcd.print(" N: ");
+    lcd.print(data->set_index);
+
+    lcd.setCursor(0, 1);
+    lcd.print("V:");
+    lcd.print(data->voltage, 2);
+
+    lcd.setCursor(9, 1);
+    lcd.print("V':");
+    lcd.print(data->voltage_der, 2);
+
+    lcd.setCursor(0, 2);
+    lcd.print("I:");
+    lcd.print(data->current);
+
+    lcd.setCursor(9, 2);
+    lcd.print("I':");
+    lcd.print(data->current_der);
 }

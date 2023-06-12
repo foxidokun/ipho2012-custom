@@ -4,3 +4,6 @@
 [submodule "lib/SD"]
 	path = lib/SD
 	url = https://github.com/arduino-libraries/SD
+[submodule "lib/hd44780"]
+	path = lib/hd44780
+	url = https://github.com/duinoWitchery/hd44780
