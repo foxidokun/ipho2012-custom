@@ -10,6 +10,3 @@
 [submodule "lib/SST25VF"]
 	path = lib/SST25VF
 	url = https://github.com/nullboundary/SST25VF
-[submodule "lib/SPIMemory"]
-	path = lib/SPIMemory
-	url = https://github.com/Marzogh/SPIMemory

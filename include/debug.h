@@ -11,9 +11,6 @@
 #define DEBUG_ERASE_FLASH                0
 #define DEBUG_LOG_MEMORY_HEADER          1
 #define DEBUG_RECHECK_WRITE              1
-#define DEBUG_MEM_CHECK_RETURN_VALUES    1
-#define DEBUG_FLASH_ERROR_DETECTION      1
-
 
 
 #if DEBUG_LOOP_VERBOSE_TIMING
