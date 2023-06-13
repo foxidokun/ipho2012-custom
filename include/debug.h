@@ -1,11 +1,17 @@
 #ifndef IPHO2012_REWORKED_DEBUG_H
 #define IPHO2012_REWORKED_DEBUG_H
 
-#define DEBUG_LOOP_VERBOSE_TIMING    0
-#define DEBUG_LOOP_TOTAL_TIMING    0
-#define DEBUG_RUNAWAY_DETECT 1
-#define DEBUG_INIT           0
-#define DEBUG_DUMP_HISTORY   0
+#define DEBUG_LOOP_VERBOSE_TIMING        0
+#define DEBUG_LOOP_TOTAL_TIMING          0
+#define DEBUG_RUNAWAY_DETECT             1
+#define DEBUG_INIT                       0
+#define DEBUG_DUMP_HISTORY               0
+#define DEBUG_LOGICAL_MEM_FETCH_POS      0
+
+#define DEBUG_ERASE_FLASH                0
+#define DEBUG_LOG_MEMORY_HEADER          1
+#define DEBUG_RECHECK_WRITE              1
+
 
 #if DEBUG_LOOP_VERBOSE_TIMING
 extern uint32_t prev_timing;

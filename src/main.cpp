@@ -142,7 +142,6 @@ static void take_action()
         case 's':
             if (current_state.current_process == MEASURING)
             {
-                Serial.println("Sampling");
                 memory_sample();
             }
         break;

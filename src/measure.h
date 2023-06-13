@@ -3,7 +3,7 @@
 
 #include <inttypes.h>
 
-struct filtered_data{
+struct __attribute__ ((__packed__)) filtered_data{
     uint16_t set;
     uint32_t abs_index;
     uint16_t set_index;
