@@ -1,5 +1,5 @@
 #include <SPI.h>
-#include "../lib/SST25VF/SST25VF.h"
+#include "../lib/SPIMemory/src/SPIMemory.h"
 
 #include "debug.h"
 #include "led.h"
@@ -8,9 +8,13 @@
 #include "memory.h"
 #include "config.h"
 
+
+const bool FAST_READ_ENABLED = !(DEBUG_FLASH_ERROR_DETECTION);
+//TODO Прописать в вызовы функций
+
 //----------------------------------------------------------------------------------------------------------------------
 
-SST25VF mem;
+SPIFlash mem(FLASH_CE_PIN);
 uint32_t write_pos;
 
 struct memory_header
@@ -23,13 +27,20 @@ struct memory_header
 
 void memory_init()
 {
-    mem.begin(FLASH_CE_PIN, FLASH_WP_PIN, FLASH_HOLD_PIN);
+    mem.begin(128);
 
 #if DEBUG_ERASE_FLASH
     mem.totalErase();
 #endif
 
-    mem.readArray(0, (uint8_t *) &memoryHeader, sizeof(memoryHeader));
+    bool res = mem.readByteArray(0, (uint8_t *) &memoryHeader, sizeof(memoryHeader));
+
+#if DEBUG_MEM_CHECK_RETURN_VALUES
+    if (!res) {
+        Serial.print("load header failed. Error code = ");
+        Serial.println(mem.error());
+    }
+#endif
 
 #if DEBUG_LOG_MEMORY_HEADER
     Serial.print("Memory header data: ");
@@ -52,11 +63,11 @@ void memory_prepare_sampling ()
 
 void memory_sample ()
 {
-    mem.writeArray(write_pos, (const uint8_t *) &latest_data, sizeof (filtered_data));
+    mem.writeByteArray(write_pos, (uint8_t *) &latest_data, sizeof (filtered_data));
 
 #if DEBUG_RECHECK_WRITE
     filtered_data tmp;
-    mem.readArray(write_pos, (uint8_t *) &tmp, sizeof(filtered_data));
+    mem.readByteArray(write_pos, (uint8_t *) &tmp, sizeof(filtered_data));
     if (memcmp(&tmp, &latest_data, sizeof(filtered_data)) != 0) {
         Serial.println("MISMATCHED SAMPLE WRITE");
     }
@@ -76,7 +87,15 @@ void memory_fetch (filtered_data *buf, uint32_t abs_pos)
 #endif
 
     uint32_t pos = sizeof (memory_header) + abs_pos * sizeof (filtered_data);
-    mem.readArray(pos, (uint8_t *) buf, sizeof(filtered_data));
+    bool res = mem.readByteArray(pos, (uint8_t *) buf, sizeof(filtered_data));
+
+#if DEBUG_MEM_CHECK_RETURN_VALUES
+    if (!res) {
+        Serial.print("sample write failed. Error code = ");
+        Serial.println(mem.error());
+    }
+#endif
+
 
 #if DEBUG_LOGICAL_MEM_FETCH_POS
     Serial.print ("Fetched logical pos:");
@@ -96,11 +115,18 @@ void memory_stop_sampling ()
     Serial.println(memoryHeader.last_set);
 #endif
 
-    mem.writeArray(0, (const uint8_t *) &memoryHeader, sizeof(memoryHeader));
+    bool res = mem.writeByteArray(0, (uint8_t *) &memoryHeader, sizeof(memoryHeader));
+
+#if DEBUG_MEM_CHECK_RETURN_VALUES
+    if (!res) {
+        Serial.print("mem header write failed. Error code = ");
+        Serial.println(mem.error());
+    }
+#endif
 
 #if DEBUG_RECHECK_WRITE
     memory_header mem_header_check;
-    mem.readArray(0, (uint8_t *) &mem_header_check, sizeof(memory_header));
+    mem.readByteArray(0, (uint8_t *) &mem_header_check, sizeof(memory_header));
     if (mem_header_check.total_measures != memoryHeader.total_measures) {
         Serial.print("MISMATCHED HEADER WRITE. Expected & Real total measures: ");
         Serial.print(memoryHeader.total_measures);
