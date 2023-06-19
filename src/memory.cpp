@@ -10,6 +10,9 @@
 
 //----------------------------------------------------------------------------------------------------------------------
 
+#include "../lib/LiquidCrystal_I2C-1.1.2/LiquidCrystal_I2C.h"
+extern LiquidCrystal_I2C lcd;
+
 SST25VF mem;
 uint32_t write_pos;
 
@@ -27,6 +30,7 @@ void memory_init()
 
 #if DEBUG_ERASE_FLASH
     mem.totalErase();
+    mem.sectorErase(0);
 #endif
 
     mem.readArray(0, (uint8_t *) &memoryHeader, sizeof(memoryHeader));
@@ -59,6 +63,8 @@ void memory_sample ()
     mem.readArray(write_pos, (uint8_t *) &tmp, sizeof(filtered_data));
     if (memcmp(&tmp, &latest_data, sizeof(filtered_data)) != 0) {
         Serial.println("MISMATCHED SAMPLE WRITE");
+        lcd.clear();
+        lcd.println("MISMATCHED SAMPLE WRITE");
     }
 #endif
 
@@ -103,7 +109,10 @@ void memory_stop_sampling ()
     mem.readArray(0, (uint8_t *) &mem_header_check, sizeof(memory_header));
     if (mem_header_check.total_measures != memoryHeader.total_measures) {
         Serial.print("MISMATCHED HEADER WRITE. Expected & Real total measures: ");
+        lcd.clear();
+        lcd.println("MISMATCHED HEADER WRITE");
         Serial.print(memoryHeader.total_measures);
+        Serial.print(" ");
         Serial.println(mem_header_check.total_measures);
     }
 #endif

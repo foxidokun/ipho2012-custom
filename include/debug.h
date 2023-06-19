@@ -8,8 +8,8 @@
 #define DEBUG_DUMP_HISTORY               0
 #define DEBUG_LOGICAL_MEM_FETCH_POS      0
 
-#define DEBUG_ERASE_FLASH                0
-#define DEBUG_LOG_MEMORY_HEADER          1
+#define DEBUG_ERASE_FLASH                1
+#define DEBUG_LOG_MEMORY_HEADER          0
 #define DEBUG_RECHECK_WRITE              1
 
 
