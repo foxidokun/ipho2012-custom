@@ -10,11 +10,15 @@
 
 //----------------------------------------------------------------------------------------------------------------------
 
-#include "../lib/LiquidCrystal_I2C-1.1.2/LiquidCrystal_I2C.h"
-extern LiquidCrystal_I2C lcd;
+#if DEBUG_RECHECK_WRITE
+    #include "../lib/LiquidCrystal_I2C-1.1.2/LiquidCrystal_I2C.h"
+    extern LiquidCrystal_I2C lcd;
+#endif
 
 SST25VF mem;
 uint32_t write_pos;
+
+const int SAMPLES_OFFSET = 4096;
 
 struct memory_header
 {
@@ -35,7 +39,7 @@ void memory_init()
 
     mem.readArray(0, (uint8_t *) &memoryHeader, sizeof(memoryHeader));
 
-#if DEBUG_LOG_MEMORY_HEADER
+#if DEBUG_LOG_MEDEBUG_RECHECK_WRITEMORY_HEADER
     Serial.print("Memory header data: ");
     Serial.print(memoryHeader.total_measures);
     Serial.println(memoryHeader.last_set);
@@ -51,7 +55,7 @@ void memory_init()
 
 void memory_prepare_sampling ()
 {
-    write_pos = sizeof (memory_header) + memoryHeader.total_measures * sizeof (filtered_data);
+    write_pos = SAMPLES_OFFSET + memoryHeader.total_measures * sizeof (filtered_data);
 }
 
 void memory_sample ()
@@ -81,7 +85,7 @@ void memory_fetch (filtered_data *buf, uint32_t abs_pos)
     Serial.println (abs_pos);
 #endif
 
-    uint32_t pos = sizeof (memory_header) + abs_pos * sizeof (filtered_data);
+    uint32_t pos = SAMPLES_OFFSET + abs_pos * sizeof (filtered_data);
     mem.readArray(pos, (uint8_t *) buf, sizeof(filtered_data));
 
 #if DEBUG_LOGICAL_MEM_FETCH_POS
@@ -102,7 +106,8 @@ void memory_stop_sampling ()
     Serial.println(memoryHeader.last_set);
 #endif
 
-    mem.writeArray(0, (const uint8_t *) &memoryHeader, sizeof(memoryHeader));
+    mem.sectorErase(0);
+    mem.writeArray(0, (const uint8_t *) &memoryHeader, sizeof(memory_header));
 
 #if DEBUG_RECHECK_WRITE
     memory_header mem_header_check;

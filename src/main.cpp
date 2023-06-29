@@ -201,7 +201,7 @@ static void render (filtered_data *data)
 
     lcd.setCursor(0, 1);
     lcd.print("V:");
-    lcd.print(data->voltage, 2);
+    lcd.print(data->voltage*1000, 1);
 
     lcd.setCursor(9, 1);
     lcd.print("V':");
@@ -209,7 +209,7 @@ static void render (filtered_data *data)
 
     lcd.setCursor(0, 2);
     lcd.print("I:");
-    lcd.print(data->current);
+    lcd.print(data->current*1000, 1);
 
     lcd.setCursor(9, 2);
     lcd.print("I':");
